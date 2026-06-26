@@ -1,0 +1,455 @@
+
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --primary:#1A56DB;--primary-hover:#1648C2;--primary-light:#EBF2FF;
+    --text:#1a1a2e;--text-sec:#5a5f7a;--text-muted:#9399b2;
+    --bg:#F7F8FC;--card:#fff;--border:#E4E7F0;--border-strong:#C8CDE0;
+    --silver:#6B7280;--gold:#D97706;--plat:#7C3AED;
+    --success:#059669;--success-bg:#D1FAE5;
+    --radius:10px;--gap:16px;
+  }
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);direction:ltr}
+  .app{min-height:100vh;display:flex;flex-direction:column}
+
+  /* NAV */
+  nav{background:#fff;border-bottom:0.5px solid var(--border);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100}
+  .logo{display:flex;align-items:center;gap:10px}
+  .logo-icon{width:34px;height:34px;background:var(--primary);border-radius:8px;display:flex;align-items:center;justify-content:center}
+  .logo-icon svg{width:18px;height:18px;fill:#fff}
+  .logo-name{font-size:17px;font-weight:600;color:var(--text)}
+  .logo-name span{color:var(--primary)}
+  .nav-links{display:flex;align-items:center;gap:4px}
+  .nav-btn{background:none;border:none;padding:8px 14px;border-radius:8px;font-size:14px;cursor:pointer;color:var(--text-sec);transition:all .15s;font-family:inherit}
+  .nav-btn:hover{background:var(--bg);color:var(--text)}
+  .nav-btn.active{color:var(--primary);background:var(--primary-light)}
+  .nav-cta{background:var(--primary);color:#fff;border:none;padding:8px 18px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;transition:background .15s;font-family:inherit}
+  .nav-cta:hover{background:var(--primary-hover)}
+  .lang-btn{background:none;border:0.5px solid var(--border-strong);padding:6px 12px;border-radius:8px;font-size:13px;cursor:pointer;color:var(--text-sec);font-family:inherit;display:flex;align-items:center;gap:6px}
+  .lang-btn:hover{border-color:var(--primary);color:var(--primary)}
+
+  /* PAGES */
+  .page{display:none;flex:1}
+  .page.active{display:block}
+
+  /* HERO */
+  .hero{padding:80px 40px 60px;text-align:center;max-width:740px;margin:0 auto}
+  .hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--primary-light);color:var(--primary);padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;margin-bottom:24px}
+  .hero h1{font-size:48px;font-weight:700;line-height:1.15;color:var(--text);margin-bottom:18px}
+  .hero h1 span{color:var(--primary)}
+  .hero p{font-size:17px;color:var(--text-sec);line-height:1.7;margin-bottom:36px}
+  .hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn-primary{background:var(--primary);color:#fff;border:none;padding:13px 28px;border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;transition:background .15s}
+  .btn-primary:hover{background:var(--primary-hover)}
+  .btn-outline{background:#fff;color:var(--primary);border:1px solid var(--primary);padding:13px 28px;border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .15s}
+  .btn-outline:hover{background:var(--primary-light)}
+
+  /* STATS */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;max-width:740px;margin:0 auto 60px;padding:0 40px}
+  .stat-card{background:#fff;border:0.5px solid var(--border);border-radius:12px;padding:20px;text-align:center}
+  .stat-num{font-size:28px;font-weight:700;color:var(--primary)}
+  .stat-lbl{font-size:13px;color:var(--text-sec);margin-top:4px}
+
+  /* TIERS SECTION */
+  .section{padding:0 40px 60px;max-width:900px;margin:0 auto;width:100%}
+  .section-header{text-align:center;margin-bottom:32px}
+  .section-header h2{font-size:28px;font-weight:700;margin-bottom:8px}
+  .section-header p{font-size:15px;color:var(--text-sec)}
+  .billing-toggle{display:inline-flex;background:var(--bg);border:0.5px solid var(--border);border-radius:10px;padding:4px;margin-bottom:32px}
+  .toggle-btn{padding:7px 20px;border-radius:8px;border:none;background:none;font-size:14px;cursor:pointer;font-family:inherit;color:var(--text-sec);transition:all .15s}
+  .toggle-btn.active{background:#fff;color:var(--primary);font-weight:500;border:0.5px solid var(--border)}
+  .save-badge{background:#D1FAE5;color:#065F46;padding:3px 8px;border-radius:12px;font-size:11px;font-weight:600;margin-left:6px}
+
+  /* TIER CARDS */
+  .tiers-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+  .tier-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:24px;transition:all .2s;position:relative;overflow:hidden}
+  .tier-card:hover{border-color:var(--primary);transform:translateY(-2px)}
+  .tier-card.featured{border-color:var(--primary);border-width:2px}
+  .featured-badge{position:absolute;top:0;right:0;background:var(--primary);color:#fff;font-size:11px;font-weight:600;padding:5px 12px;border-radius:0 14px 0 10px}
+  .tier-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px}
+  .tier-silver .tier-icon{background:#F3F4F6}
+  .tier-gold .tier-icon{background:#FEF3C7}
+  .tier-plat .tier-icon{background:#EDE9FE}
+  .tier-name{font-size:17px;font-weight:700;margin-bottom:4px}
+  .tier-silver .tier-name{color:var(--silver)}
+  .tier-gold .tier-name{color:var(--gold)}
+  .tier-plat .tier-name{color:var(--plat)}
+  .tier-desc{font-size:13px;color:var(--text-sec);margin-bottom:16px}
+  .tier-price{display:flex;align-items:baseline;gap:4px;margin-bottom:6px}
+  .tier-price .amount{font-size:30px;font-weight:700;color:var(--text)}
+  .tier-price .cur{font-size:16px;font-weight:600;color:var(--text-sec);margin-top:4px}
+  .tier-price .per{font-size:13px;color:var(--text-muted);margin-left:2px}
+  .tier-annual{font-size:12px;color:var(--text-muted);margin-bottom:16px}
+  .tier-divider{border:none;border-top:0.5px solid var(--border);margin:16px 0}
+  .tier-benefit{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text-sec);margin-bottom:10px}
+  .tier-benefit svg{width:16px;height:16px;fill:var(--success);flex-shrink:0;margin-top:1px}
+  .tier-cta{width:100%;padding:11px;border-radius:9px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;margin-top:6px;transition:all .15s;border:1.5px solid var(--primary);background:#fff;color:var(--primary)}
+  .tier-cta:hover{background:var(--primary);color:#fff}
+  .tier-card.featured .tier-cta{background:var(--primary);color:#fff}
+  .tier-card.featured .tier-cta:hover{background:var(--primary-hover)}
+
+  /* DASHBOARD */
+  .dash-wrapper{padding:32px 40px;max-width:960px;margin:0 auto;width:100%}
+  .dash-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px}
+  .dash-greeting h2{font-size:22px;font-weight:700}
+  .dash-greeting p{font-size:14px;color:var(--text-sec);margin-top:4px}
+  .dash-status{display:flex;align-items:center;gap:8px;background:var(--success-bg);color:#065F46;padding:8px 16px;border-radius:10px;font-size:14px;font-weight:500}
+  .dot-green{width:8px;height:8px;border-radius:50%;background:#059669;flex-shrink:0}
+  .dash-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:24px}
+  .d-card{background:#fff;border:0.5px solid var(--border);border-radius:12px;padding:18px}
+  .d-card-label{font-size:12px;color:var(--text-sec);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+  .d-card-val{font-size:22px;font-weight:700;color:var(--text)}
+  .d-card-sub{font-size:12px;color:var(--text-muted);margin-top:4px}
+  .dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .dash-box{background:#fff;border:0.5px solid var(--border);border-radius:12px;padding:20px}
+  .dash-box h3{font-size:15px;font-weight:600;margin-bottom:16px;color:var(--text)}
+  .benefit-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--border)}
+  .benefit-row:last-child{border-bottom:none;padding-bottom:0}
+  .benefit-icon{width:36px;height:36px;border-radius:8px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+  .benefit-info{flex:1}
+  .benefit-name{font-size:13px;font-weight:500}
+  .benefit-desc{font-size:12px;color:var(--text-sec);margin-top:2px}
+  .payment-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:0.5px solid var(--border);font-size:13px}
+  .payment-row:last-child{border-bottom:none}
+  .pay-status{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+  .pay-completed{background:#D1FAE5;color:#065F46}
+  .pay-pending{background:#FEF3C7;color:#92400E}
+
+  /* AUTH PAGE */
+  .auth-wrap{min-height:calc(100vh - 60px);display:flex;align-items:center;justify-content:center;padding:40px}
+  .auth-card{background:#fff;border:0.5px solid var(--border);border-radius:16px;padding:36px;width:100%;max-width:400px}
+  .auth-logo{text-align:center;margin-bottom:28px}
+  .auth-logo svg{width:40px;height:40px;fill:var(--primary)}
+  .auth-tabs{display:flex;background:var(--bg);border-radius:10px;padding:4px;margin-bottom:28px}
+  .auth-tab{flex:1;padding:8px;border-radius:8px;border:none;background:none;font-size:14px;cursor:pointer;font-family:inherit;color:var(--text-sec);transition:all .15s}
+  .auth-tab.active{background:#fff;color:var(--text);font-weight:500}
+  .form-group{margin-bottom:16px}
+  .form-label{display:block;font-size:13px;font-weight:500;margin-bottom:6px;color:var(--text)}
+  .form-input{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:9px;font-size:14px;font-family:inherit;color:var(--text);background:#fff;outline:none;transition:border .15s}
+  .form-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light)}
+  .form-hint{font-size:12px;color:var(--text-muted);margin-top:5px}
+  .form-submit{width:100%;background:var(--primary);color:#fff;border:none;padding:12px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;transition:background .15s;margin-top:8px}
+  .form-submit:hover{background:var(--primary-hover)}
+  .auth-footer{text-align:center;margin-top:20px;font-size:13px;color:var(--text-sec)}
+
+  /* ADMIN */
+  .admin-wrap{padding:32px 40px;max-width:960px;margin:0 auto}
+  .admin-header{margin-bottom:24px}
+  .admin-header h2{font-size:22px;font-weight:700}
+  .admin-header p{font-size:14px;color:var(--text-sec);margin-top:4px}
+  .admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .admin-card{background:#fff;border:0.5px solid var(--border);border-radius:12px;padding:22px}
+  .admin-card h3{font-size:15px;font-weight:600;margin-bottom:16px}
+  .tbl{width:100%;border-collapse:collapse;font-size:13px}
+  .tbl th{text-align:left;font-weight:500;color:var(--text-sec);padding:8px 0;border-bottom:0.5px solid var(--border)}
+  .tbl td{padding:10px 0;border-bottom:0.5px solid var(--border);color:var(--text)}
+  .tbl tr:last-child td{border-bottom:none}
+  .tier-badge{display:inline-flex;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+  .badge-silver{background:#F3F4F6;color:var(--silver)}
+  .badge-gold{background:#FEF3C7;color:var(--gold)}
+  .badge-plat{background:#EDE9FE;color:var(--plat)}
+  .action-btn{background:none;border:0.5px solid var(--border);padding:5px 12px;border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit;color:var(--text-sec);transition:all .15s}
+  .action-btn:hover{border-color:var(--primary);color:var(--primary)}
+
+  @media(max-width:700px){
+    nav{padding:0 16px}.hero{padding:48px 16px 40px}.hero h1{font-size:30px}
+    .section{padding:0 16px 40px}.stats{padding:0 16px}.dash-wrapper{padding:20px 16px}
+    .dash-grid{grid-template-columns:1fr}.admin-grid{grid-template-columns:1fr}.admin-wrap{padding:20px 16px}
+    .auth-wrap{padding:16px}
+  }
+</style>
+
+<div class="app">
+<nav>
+  <div class="logo">
+    <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+    <span class="logo-name">Shop<span>Nest</span> Plus</span>
+  </div>
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="showPage('home')">Home</button>
+    <button class="nav-btn" onclick="showPage('tiers')">Membership</button>
+    <button class="nav-btn" onclick="showPage('dashboard')">Dashboard</button>
+    <button class="nav-btn" onclick="showPage('admin')">Admin</button>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <button class="lang-btn" onclick="toggleLang()"><span id="lang-icon">🌐</span><span id="lang-label">عربي</span></button>
+    <button class="nav-cta" onclick="showPage('auth')">Log in</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-badge">✦ ShopNest Plus Membership</div>
+    <h1>Shop more.<br><span>Save more.</span> Every time.</h1>
+    <p>Join thousands of smart shoppers enjoying priority delivery, exclusive cashback, and early sale access — starting at just 29 SAR/month.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="showPage('tiers')">Explore membership plans</button>
+      <button class="btn-outline" onclick="showPage('auth')">Sign in to your account</button>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="stat-card"><div class="stat-num">50K+</div><div class="stat-lbl">Active members</div></div>
+    <div class="stat-card"><div class="stat-num">+30%</div><div class="stat-lbl">Avg. order frequency</div></div>
+    <div class="stat-card"><div class="stat-num">4.2★</div><div class="stat-lbl">Member satisfaction</div></div>
+    <div class="stat-card"><div class="stat-num">3 Tiers</div><div class="stat-lbl">Silver · Gold · Platinum</div></div>
+  </div>
+</div>
+
+<!-- TIERS -->
+<div class="page" id="page-tiers">
+  <div class="section" style="padding-top:40px">
+    <div class="section-header">
+      <h2>Pick your membership</h2>
+      <p>All plans include free standard delivery — upgrade anytime.</p>
+      <div style="margin-top:20px">
+        <div class="billing-toggle">
+          <button class="toggle-btn active" id="btn-monthly" onclick="setBilling('monthly')">Monthly</button>
+          <button class="toggle-btn" id="btn-annual" onclick="setBilling('annual')">Annual <span class="save-badge">Save 15%</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="tiers-grid">
+      <div class="tier-card tier-silver">
+        <div class="tier-icon">🥈</div>
+        <div class="tier-name">Silver</div>
+        <div class="tier-desc">Occasional shoppers &amp; students</div>
+        <div class="tier-price"><span class="cur">SAR</span><span class="amount" id="silver-price">29</span><span class="per">/mo</span></div>
+        <div class="tier-annual" id="silver-annual">or 296 SAR/year</div>
+        <hr class="tier-divider">
+        <div class="tier-benefit"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10" fill="none" stroke="#059669" stroke-width="2"/></svg>Free standard delivery</div>
+        <div class="tier-benefit"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10" fill="none" stroke="#059669" stroke-width="2"/></svg>5% member discount on selected items</div>
+        <div class="tier-benefit"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10" fill="none" stroke="#059669" stroke-width="2"/></svg>Extended 30-day return window</div>
+        <button class="tier-cta" onclick="showPage('auth')">Get Silver</button>
+      </div>
+
+      <div class="tier-card tier-gold featured">
+        <div class="featured-badge">Most popular</div>
+        <div class="tier-icon">🥇</div>
+        <div class="tier-name">Gold</div>
+        <div class="tier-desc">Regular buyers &amp; parents</div>
+        <div class="tier-price"><span class="cur">SAR</span><span class="amount" id="gold-price">59</span><span class="per">/mo</span></div>
+        <div class="tier-annual" id="gold-annual">or 602 SAR/year</div>
+        <hr class="tier-divider">
+        <div class="tier-benefit"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10" fill="none" stroke="#059669" stroke-width="2"/></svg>Everything in Silver</div>
+        <div class="tier-benefit"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10" fill="none" stroke="#059669" stroke-width="2"/></svg>Priority delivery (2-hour window)</div>
+        <div class="tier-benefit"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10" fill="none" stroke="#059669" stroke-width="2"/></svg>10% cashback on eligible orders</div>
+        <div class="tier-benefit"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10" fill="none" stroke="#059669" stroke-width="2"/></svg>24-hour early sale access</div>
+        <button class="tier-cta" onclick="showPage('auth')">Get Gold</button>
+      </div>
+
+      <div class="tier-card tier-plat">
+        <div class="tier-icon">💎</div>
+        <div class="tier-name">Platinum</div>
+        <div class="tier-desc">High-spend professionals</div>
+        <div class="tier-price"><span class="cur">SAR</span><span class="amount" id="plat-price">99</span><span class="per">/mo</span></div>
+        <div class="tier-annual" id="plat-annual">or 1,010 SAR/year</div>
+        <hr class="tier-divider">
+        <div class="tier-benefit"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10" fill="none" stroke="#059669" stroke-width="2"/></svg>Everything in Gold</div>
+        <div class="tier-benefit"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10" fill="none" stroke="#059669" stroke-width="2"/></svg>Same-day delivery guarantee</div>
+        <div class="tier-benefit"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10" fill="none" stroke="#059669" stroke-width="2"/></svg>Personalized deal engine</div>
+        <div class="tier-benefit"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10" fill="none" stroke="#059669" stroke-width="2"/></svg>Free returns, no time limit</div>
+        <div class="tier-benefit"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10" fill="none" stroke="#059669" stroke-width="2"/></svg>Dedicated support line</div>
+        <button class="tier-cta" onclick="showPage('auth')">Get Platinum</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="page" id="page-dashboard">
+  <div class="dash-wrapper">
+    <div class="dash-header">
+      <div class="dash-greeting">
+        <h2>Welcome back, Ahmed 👋</h2>
+        <p>Your Gold membership is active and all benefits are applied.</p>
+      </div>
+      <div class="dash-status"><div class="dot-green"></div>Gold — Active</div>
+    </div>
+    <div class="dash-cards">
+      <div class="d-card">
+        <div class="d-card-label">Renewal date</div>
+        <div class="d-card-val">Jul 26, 2026</div>
+        <div class="d-card-sub">Monthly billing</div>
+      </div>
+      <div class="d-card">
+        <div class="d-card-label">Total cashback</div>
+        <div class="d-card-val">SAR 124</div>
+        <div class="d-card-sub">This billing period</div>
+      </div>
+      <div class="d-card">
+        <div class="d-card-label">Orders placed</div>
+        <div class="d-card-val">17</div>
+        <div class="d-card-sub">Since joining</div>
+      </div>
+      <div class="d-card">
+        <div class="d-card-label">Member since</div>
+        <div class="d-card-val">Jan 2025</div>
+        <div class="d-card-sub">18 months</div>
+      </div>
+    </div>
+    <div class="dash-grid">
+      <div class="dash-box">
+        <h3>Your Gold benefits</h3>
+        <div class="benefit-row"><div class="benefit-icon">🚚</div><div class="benefit-info"><div class="benefit-name">Priority delivery</div><div class="benefit-desc">2-hour delivery window</div></div></div>
+        <div class="benefit-row"><div class="benefit-icon">💰</div><div class="benefit-info"><div class="benefit-name">10% cashback</div><div class="benefit-desc">On all eligible orders</div></div></div>
+        <div class="benefit-row"><div class="benefit-icon">🏷️</div><div class="benefit-info"><div class="benefit-name">Early sale access</div><div class="benefit-desc">24 hours before public</div></div></div>
+        <div class="benefit-row"><div class="benefit-icon">↩️</div><div class="benefit-info"><div class="benefit-name">30-day returns</div><div class="benefit-desc">Extended return window</div></div></div>
+        <div style="margin-top:16px"><button class="btn-outline" style="width:100%;padding:10px;font-size:14px" onclick="showPage('tiers')">Upgrade to Platinum →</button></div>
+      </div>
+      <div class="dash-box">
+        <h3>Payment history</h3>
+        <div class="payment-row"><div><div style="font-weight:500">Gold — Monthly</div><div style="color:var(--text-muted);font-size:12px;margin-top:2px">Jun 26, 2026</div></div><div style="text-align:right"><div style="font-weight:600">SAR 59</div><span class="pay-status pay-completed">Completed</span></div></div>
+        <div class="payment-row"><div><div style="font-weight:500">Gold — Monthly</div><div style="color:var(--text-muted);font-size:12px;margin-top:2px">May 26, 2026</div></div><div style="text-align:right"><div style="font-weight:600">SAR 59</div><span class="pay-status pay-completed">Completed</span></div></div>
+        <div class="payment-row"><div><div style="font-weight:500">Gold — Monthly</div><div style="color:var(--text-muted);font-size:12px;margin-top:2px">Apr 26, 2026</div></div><div style="text-align:right"><div style="font-weight:600">SAR 59</div><span class="pay-status pay-completed">Completed</span></div></div>
+        <div class="payment-row"><div><div style="font-weight:500">Silver → Gold upgrade</div><div style="color:var(--text-muted);font-size:12px;margin-top:2px">Mar 10, 2026</div></div><div style="text-align:right"><div style="font-weight:600">SAR 30</div><span class="pay-status pay-completed">Completed</span></div></div>
+        <div style="margin-top:16px;text-align:center;font-size:13px;color:var(--text-muted)">Showing last 4 payments</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AUTH -->
+<div class="page" id="page-auth">
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-logo"><svg viewBox="0 0 40 40"><rect width="40" height="40" rx="10" fill="#1A56DB"/><path d="M10 20l6 6 14-12" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login" onclick="setAuthTab('login')">Log in</button>
+        <button class="auth-tab" id="tab-register" onclick="setAuthTab('register')">Register</button>
+      </div>
+      <div id="login-form">
+        <div class="form-group">
+          <label class="form-label">Email address</label>
+          <input class="form-input" type="email" placeholder="name@example.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input class="form-input" type="password" placeholder="Your password">
+        </div>
+        <button class="form-submit" onclick="showPage('dashboard')">Log in</button>
+      </div>
+      <div id="register-form" style="display:none">
+        <div class="form-group">
+          <label class="form-label">Email address</label>
+          <input class="form-input" type="email" placeholder="name@example.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input class="form-input" type="password" placeholder="At least 8 characters">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Shipping address</label>
+          <input class="form-input" type="text" placeholder="Your full address">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date of birth</label>
+          <input class="form-input" type="date">
+          <div class="form-hint">Format: YYYY-MM-DD</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Notification preferences</label>
+          <input class="form-input" type="text" placeholder="Email, SMS, or Both">
+        </div>
+        <button class="form-submit" onclick="showPage('tiers')">Create account</button>
+      </div>
+      <div class="auth-footer">ShopNest Plus · Secure &amp; encrypted</div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="page" id="page-admin">
+  <div class="admin-wrap">
+    <div class="admin-header">
+      <h2>Admin panel</h2>
+      <p>Manage membership tiers, benefits, and platform settings.</p>
+    </div>
+    <div class="admin-grid">
+      <div class="admin-card">
+        <h3>Membership tiers</h3>
+        <table class="tbl">
+          <thead><tr><th>Tier</th><th>Monthly</th><th>Annual</th><th></th></tr></thead>
+          <tbody>
+            <tr><td><span class="tier-badge badge-silver">Silver</span></td><td>SAR 29</td><td>SAR 296</td><td><button class="action-btn">Edit</button></td></tr>
+            <tr><td><span class="tier-badge badge-gold">Gold</span></td><td>SAR 59</td><td>SAR 602</td><td><button class="action-btn">Edit</button></td></tr>
+            <tr><td><span class="tier-badge badge-plat">Platinum</span></td><td>SAR 99</td><td>SAR 1,010</td><td><button class="action-btn">Edit</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="admin-card">
+        <h3>Add a benefit</h3>
+        <div class="form-group">
+          <label class="form-label">Benefit name</label>
+          <input class="form-input" type="text" placeholder="e.g. Same-day delivery">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <input class="form-input" type="text" placeholder="Brief description">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Assign to tier</label>
+          <select class="form-input">
+            <option>Silver</option><option>Gold</option><option>Platinum</option>
+          </select>
+        </div>
+        <button class="btn-primary" style="width:100%;padding:11px;font-size:14px">Add benefit</button>
+      </div>
+      <div class="admin-card" style="grid-column:1/-1">
+        <h3>Recent subscriptions</h3>
+        <table class="tbl">
+          <thead><tr><th>Customer ID</th><th>Tier</th><th>Billing</th><th>Status</th><th>Next renewal</th></tr></thead>
+          <tbody>
+            <tr><td>#1001</td><td><span class="tier-badge badge-gold">Gold</span></td><td>Monthly</td><td><span class="pay-status pay-completed">Active</span></td><td>Jul 26, 2026</td></tr>
+            <tr><td>#1002</td><td><span class="tier-badge badge-silver">Silver</span></td><td>Annual</td><td><span class="pay-status pay-completed">Active</span></td><td>Jan 15, 2027</td></tr>
+            <tr><td>#1003</td><td><span class="tier-badge badge-plat">Platinum</span></td><td>Monthly</td><td><span class="pay-status pay-completed">Active</span></td><td>Jul 10, 2026</td></tr>
+            <tr><td>#1004</td><td><span class="tier-badge badge-gold">Gold</span></td><td>Annual</td><td><span class="pay-status pay-pending">Renewal due</span></td><td>Jun 30, 2026</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+const prices={silver:{monthly:29,annual:25},gold:{monthly:59,annual:50},plat:{monthly:99,annual:84}};
+let billing='monthly';
+let lang='en';
+const ar={home:'الرئيسية',membership:'العضوية',dashboard:'لوحتي',admin:'الإدارة',login:'تسجيل الدخول','Log in':'دخول',Register:'إنشاء حساب'};
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const map={home:0,tiers:1,dashboard:2,admin:3};
+  if(map[id]!==undefined) document.querySelectorAll('.nav-btn')[map[id]].classList.add('active');
+}
+
+function setBilling(type){
+  billing=type;
+  document.getElementById('btn-monthly').classList.toggle('active',type==='monthly');
+  document.getElementById('btn-annual').classList.toggle('active',type==='annual');
+  const s=prices.silver[type],g=prices.gold[type],p=prices.plat[type];
+  document.getElementById('silver-price').textContent=s;
+  document.getElementById('gold-price').textContent=g;
+  document.getElementById('plat-price').textContent=p;
+  document.getElementById('silver-annual').textContent=type==='monthly'?'or 296 SAR/year':'Billed as 296 SAR/year';
+  document.getElementById('gold-annual').textContent=type==='monthly'?'or 602 SAR/year':'Billed as 602 SAR/year';
+  document.getElementById('plat-annual').textContent=type==='monthly'?'or 1,010 SAR/year':'Billed as 1,010 SAR/year';
+}
+
+function setAuthTab(t){
+  document.getElementById('tab-login').classList.toggle('active',t==='login');
+  document.getElementById('tab-register').classList.toggle('active',t==='register');
+  document.getElementById('login-form').style.display=t==='login'?'block':'none';
+  document.getElementById('register-form').style.display=t==='register'?'block':'none';
+}
+
+function toggleLang(){
+  lang=lang==='en'?'ar':'en';
+  const isAr=lang==='ar';
+  document.body.style.direction=isAr?'rtl':'ltr';
+  document.getElementById('lang-label').textContent=isAr?'English':'عربي';
+}
+</script>
